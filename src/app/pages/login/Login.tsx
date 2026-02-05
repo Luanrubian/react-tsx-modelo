@@ -1,9 +1,12 @@
 import { useCallback, useRef, useState } from "react";
 import { InputLogin } from "./components/inputLogin";
 import { ButtonLogin } from "./components/buttonLogin";
+import { useUsuarioLogado } from "../../shared/hooks";
 
 export const Login = () => {
     const inputPasswordRef= useRef<HTMLInputElement>(null);
+
+    const {nomeDoUsuario} = useUsuarioLogado();
 
     const[password, setPassword] = useState('');
     const[email, setEmail] = useState('');
@@ -16,6 +19,8 @@ export const Login = () => {
     return(
           <div>
             <form>
+
+                    {nomeDoUsuario}
                     <InputLogin
                     label="Email"
                     value={email}

@@ -1,20 +1,68 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useState } from "react";
+
+interface IListItem{
+    title: string;
+    isSelected: boolean;
+}
 
 
 export const Dashboard = () => {
-    const counterRef = useRef({ counter: 0 })
-    console.log(counterRef)
+
+    const [lista,setLista] = useState<IListItem[]>([ ]);
+
+    const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
+        if(e.key === 'Enter'){
+          if(e.currentTarget.value.trim().length === 0) return;
+
+          const  value = e.currentTarget.value;
+
+           e.currentTarget.value = '';
+
+           setLista((oldLista) => {
+                if(oldLista.some((listItem) => listItem.title === value)) return oldLista;
+            return [
+                    ...oldLista,
+                    {
+                        title: value,
+                        isSelected: false, 
+                    }
+                ];
+            });
+        }
+    }, []);
 
     return (
     <div>  
-        <p>Dashboard</p>
+        <p>Lista</p>
+        <input
+        onKeyDown={handleInputKeyDown}
+        />
 
-        <p>Contador: {counterRef.current.counter} </p>
-
-        <button onClick={() => counterRef.current.counter++}>Somar</button>
-
-        <Link to="/entrar">Login</Link>
+        <p>{lista.filter((listItem) => listItem.isSelected).length}</p>
+         <ul>
+                {lista.map((listItem) => (
+                    <li key={listItem.title}>
+                        <input 
+                            type="checkbox"
+                            checked={listItem.isSelected}
+                            onChange={() =>
+                                setLista(oldLista => {
+                                    return oldLista.map(oldItem => {
+                                        if(oldItem.title === listItem.title){
+                                            return {
+                                                ...oldItem,
+                                                isSelected: !oldItem.isSelected,
+                                            };
+                                        }
+                                        return oldItem;
+                                    });
+                                })
+                            }
+                        />
+                        {listItem.title}
+                    </li>
+                ))}
+            </ul>
     </div>
     );
 }
