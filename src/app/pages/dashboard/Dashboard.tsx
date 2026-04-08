@@ -1,14 +1,15 @@
 import { useCallback, useState } from "react";
 
-interface IListItem{
+interface ITarefa{
+    id: number;
     title: string;
-    isSelected: boolean;
+    isCompleted: boolean;
 }
 
 
 export const Dashboard = () => {
 
-    const [lista,setLista] = useState<IListItem[]>([ ]);
+    const [lista,setLista] = useState<ITarefa[]>([ ]);
 
     const handleInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback((e) => {
         if(e.key === 'Enter'){
@@ -24,7 +25,8 @@ export const Dashboard = () => {
                     ...oldLista,
                     {
                         title: value,
-                        isSelected: false, 
+                        isCompleted: false, 
+                        id: oldLista.length,
                     }
                 ];
             });
@@ -38,20 +40,20 @@ export const Dashboard = () => {
         onKeyDown={handleInputKeyDown}
         />
 
-        <p>{lista.filter((listItem) => listItem.isSelected).length}</p>
+        <p>{lista.filter((listItem) => listItem.isCompleted).length}</p>
          <ul>
                 {lista.map((listItem) => (
-                    <li key={listItem.title}>
+                    <li key={listItem.id}>
                         <input 
                             type="checkbox"
-                            checked={listItem.isSelected}
+                            checked={listItem.isCompleted}
                             onChange={() =>
                                 setLista(oldLista => {
                                     return oldLista.map(oldItem => {
                                         if(oldItem.title === listItem.title){
                                             return {
                                                 ...oldItem,
-                                                isSelected: !oldItem.isSelected,
+                                                isCompleted: !oldItem.isCompleted,
                                             };
                                         }
                                         return oldItem;
