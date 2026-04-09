@@ -1,14 +1,13 @@
 import { Api } from "../ApiConfig";
 import { ApiException } from "../ErrorException";
 
-
-interface ITarefa{
+export interface ITarefa{
     id: number;
     title: string;
     isCompleted: boolean;
 }
 
-const getAll = async (): Promise<ITarefa | ApiException> => { 
+const getAll = async (): Promise<ITarefa[] | ApiException> => { 
 
     try{
     const {data} = await Api().get('/tarefas') 
@@ -54,7 +53,7 @@ const deleteById = async (id:string): Promise<undefined | ApiException> => {
     const {data} = await Api().get(`/tarefas${id}`) 
     return data;
     } catch(error: any){
-        return new ApiException(error.message || 'Erro ao deletar registro.')    
+        return new ApiException(error.message || 'Erro ao consultar a API.')    
     }
 };
 
